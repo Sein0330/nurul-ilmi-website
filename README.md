@@ -1,58 +1,91 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🕌 Nurul Ilmi - Educational Portal & Learning Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A **production-grade** full-stack web application designed for **Bimbel (Bimbingan Belajar) Nurul Ilmi**. This platform automates the student registration process, manages multi-role users, and integrates seamlessly with external automation tools for real-time data syncing and email notifications.
 
-## About Laravel
+Built from scratch to solve real-world operational needs, focusing on a **seamless SPA-like user experience** and **robust backend automation**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Key Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+*   **Multi-Role Authentication (RBAC):** Secure login system with distinct access levels: `Super Admin`, `Admin`, `Staff`, and `Student`.
+*   **SPA-Like Navigation:** Utilizes Livewire's dynamic component rendering to switch between pages (Home, Programs, Mentors, Registration) without full page reloads.
+*   **Interactive Registration Form:** A real-time validated form that allows students to enroll in specific programs and packages.
+*   **Automated Workflow (n8n Integration):** When a student registers, the system triggers a webhook to an n8n instance, which automatically:
+    *   Appends the registration data to **Google Sheets**.
+    *   Sends a formatted **Email Notification** to the Admin.
+*   **Email Verification:** Requires students to verify their email address before accessing the dashboard (using SMTP).
+*   **Responsive Admin Dashboard:** Allows admins to view registration metrics, track pending enrollments, and manage student data.
+*   **Cloudflare Tunnel Deployment:** Exposed securely to the public internet via Cloudflare Tunnels (running on a self-hosted WSL environment).
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🛠️ Tech Stack
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Backend & Core:**
+*   **Laravel 12.x** - PHP Framework
+*   **Livewire 3** - Full-stack framework for dynamic, reactive UI
+*   **Spatie Laravel-Permission** - Role and permission management
+*   **SQLite** - Lightweight, file-based relational database
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+**Frontend:**
+*   **Tailwind CSS** - Utility-first CSS framework (Custom "Young Brown" theme)
+*   **Alpine.js** - Lightweight JavaScript for interactive elements
+*   **Vite** - Frontend asset bundling
 
-## Agentic Development
+**Automation & External APIs:**
+*   **n8n** (Self-hosted via Docker) - Workflow automation
+*   **Google Sheets API** - Data replication and reporting
+*   **Gmail API / SMTP** - Automated email dispatching
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+**Infrastructure:**
+*   **WSL2 (Ubuntu)** - Development and hosting environment
+*   **Cloudflare Tunnels** - Secure public routing
+*   **Systemd** - Process management for 24/7 uptime
 
-```bash
-composer require laravel/boost --dev
+---
 
-php artisan boost:install
-```
+## 🚀 System Architecture Flow
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+1.  **User Registers:** Student creates an account on the landing page.
+2.  **Email Verification:** Laravel sends a verification link via SMTP.
+3.  **Form Submission:** Verified students fill out the enrollment form.
+4.  **Database & Webhook:** Laravel saves the data to SQLite and simultaneously fires an HTTP POST request to the n8n webhook.
+5.  **Automation:** n8n receives the payload, appends a row to the designated Google Spreadsheet, and triggers an email notification to the Admin.
+6.  **Admin Action:** Admin logs into the dashboard to review and verify the registration.
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 💻 Local Development Setup
 
-## Code of Conduct
+If you wish to run this project locally, follow these steps:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/username/nurul-ilmi-portal.git
+   cd nurul-ilmi-portal
+2. Install PHP & Node dependencies:
+	```bash
+	composer install
+	npm install
+3. Copy the environment file and generate app key:
+	```bash
+	cp .env.example .env
+	php artisan key:generate
+4. Configure your .env (Database, Mail, and n8n Webhook URL).
+5. Run migrations and seeders:
+	```bash
+	touch database/database.sqlite
+	php artisan migrate --seed
+6. Build assets and serve:
+	```bash
+	npm run build
+	php artisan serve --port=8081
 
-## Security Vulnerabilities
+👨‍💻 Author
+[Almaarij]
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+GitHub: @sein0103
+LinkedIn: Yopi Alma Arij
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Built with passion to modernize educational administration.
